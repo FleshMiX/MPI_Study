@@ -1,5 +1,5 @@
 #pragma once
 
-float phi(float x);
+double phi(int x);
 
-float psi(float T);
+double psi(int t);

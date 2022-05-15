@@ -20,12 +20,13 @@ int main(int argc, char** argv) {
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-    int M = 10000, K = 10000;
+    int M = 100, K = 100;
     int cnt = count(rank, M, size), cnt_temp = 0, shift = 0;
     int *counts = (int*)calloc(size, sizeof(int));
     int *shifts = (int*)calloc(size, sizeof(int));
 
     double* data = (double*)calloc(K*M, sizeof(double)); //data - решение уравнения
+    double* dataRecv = (double*)calloc(K*M, sizeof(double));
     double t1, t2; //
     double tao = 0.00001, h = 0.00001;
 
@@ -60,7 +61,7 @@ int main(int argc, char** argv) {
 
         }
 
-        MPI_Allgatherv(&data[shift*K], cnt*K, MPI_DOUBLE, data, counts, shifts, MPI_DOUBLE, MPI_COMM_WORLD);
+        MPI_Allgatherv(&data[shift*K], cnt*K, MPI_DOUBLE, dataRecv, counts, shifts, MPI_DOUBLE, MPI_COMM_WORLD);
 
 
         //запись в файлы
@@ -108,7 +109,7 @@ int main(int argc, char** argv) {
 
         }
 
-        MPI_Allgatherv(&data[shift*K], cnt*K, MPI_DOUBLE, data, counts, shifts, MPI_DOUBLE, MPI_COMM_WORLD);
+        MPI_Allgatherv(&data[shift*K], cnt*K, MPI_DOUBLE, dataRecv, counts, shifts, MPI_DOUBLE, MPI_COMM_WORLD);
 
         MPI_Finalize();
 
